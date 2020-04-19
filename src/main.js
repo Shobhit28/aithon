@@ -19,7 +19,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Messages from './Messages';
 import { Grid, Card, Input } from 'semantic-ui-react';
-import WatsonAssistantService from '../server/watson-assistant-service'
 
 const util = require('util');  
 
@@ -40,7 +39,6 @@ class Main extends React.Component {
     // change in state fires re-render of components
     this.state = {
       error: error,
-      uptimeSeconds: 0,
       // assistant data
       context: {},
       userInput: '',
@@ -50,19 +48,6 @@ class Main extends React.Component {
           owner: ''
         }]
     };
-    this.startTimer();
-  }
-
-  startTimer(){
-    setTimeout(() => this.setState({
-      uptimeSeconds: this.state.uptimeMinutes + 1
-    }), 1000);
-  }
-
-  resetTimer(){
-    this.setState({
-      uptimeSeconds: 0
-    });
   }
   
   /**
@@ -100,6 +85,7 @@ class Main extends React.Component {
 
       // returned text from assistant will either be a pre-canned 
       // dialog response, or Discovery Search result
+      console.log(result);
       if (result.response_type === 'text') {
         // normal dialog response from Assistant
         // add to message list
@@ -113,6 +99,7 @@ class Main extends React.Component {
         console.log('GOT DISCO OUTPUT!');
         // got response from Assistant search skill
         // add a header to our message
+        
         messageCounter += 1;
         conversation.push({
           id: messageCounter,
@@ -187,10 +174,8 @@ class Main extends React.Component {
    * Send user message to Assistant. 
    */
   handleKeyPress(event) {
-    const { userInput, conversation, uptimeSeconds } = this.state;
-    if(uptimeSeconds > 59){
+    const { userInput, conversation } = this.state;
 
-    }
     if (event.key === 'Enter') {
       messageCounter += 1;
       conversation.push(
